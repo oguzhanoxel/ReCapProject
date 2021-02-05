@@ -16,27 +16,52 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        public void Add(Car car)
+        {
+            if (car.Name.Length >= 2)
+            {
+                _carDal.Add(car);
+            } else
+            {
+                Console.WriteLine("\nCar name must be more than one character !!!".ToUpper());
+            }
+        }
+
+        public void Delete(Car car)
+        {
+            _carDal.Delete(car);
+        }
+
         public List<Car> GetAll()
         {
             return _carDal.GetAll();
         }
 
-        public Car GetById(int car_id)
+        public List<Car> GetById(int car_id)
         {
-            return _carDal.GetById(car_id);
+            return _carDal.GetAll(p => p.Id == car_id);
         }
 
-        public void Add(Car car)
+        public List<Car> GetCarsByBrandId(int brand_id)
         {
-            _carDal.Add(car);
+            return _carDal.GetAll(p => p.BrandId == brand_id);
         }
-        public void Delete(Car car)
+
+        public List<Car> GetCarsByColorId(int color_id)
         {
-            _carDal.Delete(car);
+            return _carDal.GetAll(p => p.ColorId == color_id);
         }
+
         public void Update(Car car)
         {
-            _carDal.Update(car);
+            if (car.Name.Length >= 2)
+            {
+                _carDal.Update(car);
+            }
+            else
+            {
+                Console.WriteLine("Car name must be more than one character");
+            }
         }
     }
 }
