@@ -11,29 +11,24 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            CarManager carManager = new CarManager(new EfCarDal());
-            List<Car> _cars = carManager.GetAll();
-
-            void MyList(string listTitle) {
-                Console.WriteLine("\n\n" + listTitle.ToUpper());
-                foreach (var item in carManager.GetAll())
-                {
-                    Console.WriteLine(
-                        "\n" +
-                        "id = " + item.Id + "\n" +
-                        "brand id = " + item.BrandId + "\n" +
-                        "color id = " + item.ColorId + "\n" +
-                        "name = " + item.Name + "\n" +
-                        "model year = " + item.ModelYear + "\n" +
-                        "daily price = " + item.DailyPrice + "\n" +
-                        "desc = " + item.Description
-                    );
-                }
-            }
-
-            MyList("Cars"); // İlk liste
-
-   
+            CarTest();
         }
+
+        
+        private static void CarTest()
+        {
+            CarManager carManager = new CarManager(new EfCarDal());
+            foreach (var item in carManager.GetCarDetails())
+            {
+                Console.WriteLine(
+                    "\n" +
+                    "CarName= " + item.CarName + "\n" +
+                    "BrandName= " + item.BrandName + "\n" +
+                    "ColorName= " + item.ColorName + "\n" +
+                    "DailyPrice= " + item.DailyPrice
+                );
+            }
+        }
+        
     }
 }
