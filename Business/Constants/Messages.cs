@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Business.Constants
+{
+    public class Messages
+    {
+        public static string CarNameInvalid = "Car name length must be more than two charaters";
+        public static string CarAdded = "Car Added";
+        public static string CarDeleted = "Car Deleted";
+        public static string CarUpdated = "Car Updated";
+        public static string ColorAdded = "Color Added";
+        public static string ColorDeleted = "Color Deleted";
+        public static string ColorUpdated = "Color Updated";
+        public static string BrandAdded = "Brand Added";
+        public static string BrandDelete = "Brand Deleted";
+        public static string BrandUpdated = "Brand Updated";
+    }
+}

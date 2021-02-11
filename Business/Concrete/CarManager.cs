@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -17,57 +19,55 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
-            if (car.Name.Length >= 2)
+            if (car.Name.Length < 2)
             {
-                _carDal.Add(car);
-            } else
-            {
-                Console.WriteLine("\nCar name must be more than one character !!!".ToUpper());
+                return new ErrorResult(Messages.CarNameInvalid);
             }
+            _carDal.Add(car);
+            return new SuccessResult(Messages.CarAdded);
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             _carDal.Delete(car);
+            return new SuccessResult(Messages.CarDeleted);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDal.GetAll();
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
-        public List<Car> GetById(int car_id)
+        public IDataResult<Car> GetById(int car_id)
         {
-            return _carDal.GetAll(p => p.ID == car_id);
+            return new SuccessDataResult<Car>(_carDal.Get(p => p.ID == car_id));
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
         }
 
-        public List<Car> GetCarsByBrandId(int brand_id)
+        public IDataResult<List<Car>> GetCarsByBrandId(int brand_id)
         {
-            return _carDal.GetAll(p => p.BrandId == brand_id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.BrandId == brand_id));
         }
 
-        public List<Car> GetCarsByColorId(int color_id)
+        public IDataResult<List<Car>> GetCarsByColorId(int color_id)
         {
-            return _carDal.GetAll(p => p.ColorId == color_id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.ColorId == color_id));
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
-            if (car.Name.Length >= 2)
+            if (car.Name.Length < 2)
             {
-                _carDal.Update(car);
+                return new ErrorResult(Messages.CarNameInvalid);
             }
-            else
-            {
-                Console.WriteLine("Car name must be more than one character");
-            }
+            _carDal.Update(car);
+            return new SuccessResult(Messages.CarUpdated);
         }
     }
 }
