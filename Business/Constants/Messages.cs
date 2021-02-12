@@ -16,5 +16,15 @@ namespace Business.Constants
         public static string BrandAdded = "Brand Added";
         public static string BrandDelete = "Brand Deleted";
         public static string BrandUpdated = "Brand Updated";
+        public static string UserAdded = "User Added";
+        public static string UserDeleted = "User Deleted";
+        public static string UserUpdated = "User Updated";
+        public static string CustomerAdded = "Customer Added";
+        public static string CustomerDeleted = "Customer Deleted";
+        public static string CustomerUpdated = "Customer Updated";
+        public static string RentalAdded = "Rental Added";
+        public static string RentalDeleted = "Rental Deleted";
+        public static string RentalUpdated = "Rental Updated";
+        public static string RentalReturnDateError = "Rental return date is empty !";
     }
 }
