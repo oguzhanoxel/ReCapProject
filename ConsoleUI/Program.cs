@@ -11,8 +11,9 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            // CarTest();
-            TestArea();
+            //CarTest();
+            //TestArea();
+            UserTest();
         }
 
         
@@ -36,16 +37,17 @@ namespace ConsoleUI
         private static void UserTest()
         {
             UserManager userManeger = new UserManager(new EfUserDal());
+            BrandManager brandManager = new BrandManager(new EfBrandDal());
 
-            var result = userManeger.GetAll();
+            var result = brandManager.GetAll();
 
             foreach (var item in result.Data)
             {
                 Console.WriteLine(
                     "\n" +
-                    "FirstName= " + item.FirstName + "\n" +
-                    "LastName= " + item.LastName + "\n" +
-                    "Email= " + item.Email
+                    "FirstName= " + item.ID + "\n" +
+                    "LastName= " + item.Name + "\n" +
+                    "Email= " + item.Name
                 );
             }
         }
