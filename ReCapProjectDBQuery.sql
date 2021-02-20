@@ -1,56 +1,57 @@
 ﻿CREATE DATABASE ReCapProjectDB;
 
-CREATE TABLE Colors (
-    ID int IDENTITY (1, 1) NOT NULL,
-    Name varchar(255),
-    PRIMARY KEY (ID),
+CREATE TABLE [dbo].[Brands] (
+    [ID]   INT           IDENTITY (1, 1) NOT NULL,
+    [Name] VARCHAR (255) NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 
-CREATE TABLE Brands (
-    ID int IDENTITY (1, 1) NOT NULL,
-    Name varchar(255),
-    PRIMARY KEY (ID),
+CREATE TABLE [dbo].[Colors] (
+    [ID]   INT           IDENTITY (1, 1) NOT NULL,
+    [Name] VARCHAR (255) NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
 );
 
-CREATE TABLE Cars (
-    ID int IDENTITY (1, 1) NOT NULL,
-    BrandID int,
-    ColorID int,
-	Name nvarchar(255),
-    ModelYear smallint,
-    DailyPrice DECIMAL(10,2),
-    Description nvarchar(max),
-    PRIMARY KEY (ID),
-    FOREIGN KEY (BrandID) REFERENCES Brands(ID),
-    FOREIGN KEY (ColorID) REFERENCES Colors(ID),
+CREATE TABLE [dbo].[Cars] (
+    [ID]          INT             IDENTITY (1, 1) NOT NULL,
+    [BrandID]     INT             NOT NULL,
+    [ColorID]     INT             NOT NULL,
+    [Name]        NVARCHAR (255)  NOT NULL,
+    [ModelYear]   SMALLINT        NOT NULL,
+    [DailyPrice]  DECIMAL (10, 2) NOT NULL,
+    [Description] NVARCHAR (MAX)  NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC),
+    FOREIGN KEY ([BrandID]) REFERENCES [dbo].[Brands] ([ID]),
+    FOREIGN KEY ([ColorID]) REFERENCES [dbo].[Colors] ([ID])
 );
 
-CREATE TABLE Users (
-    ID int IDENTITY (1, 1) NOT NULL,
-    FirstName varchar(255),
-    LastName varchar(255),
-    Email  varchar(255) NOT NULL UNIQUE,
-    Password varchar(255) NOT NULL,
-    PRIMARY KEY (ID),
+CREATE TABLE [dbo].[Users] (
+    [ID]        INT           IDENTITY (1, 1) NOT NULL,
+    [FirstName] VARCHAR (255) NULL,
+    [LastName]  VARCHAR (255) NULL,
+    [Email]     VARCHAR (255) NOT NULL,
+    [Password]  VARCHAR (255) NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC),
+    UNIQUE NONCLUSTERED ([Email] ASC)
 );
 
-CREATE TABLE Customers (
-    ID int IDENTITY (1, 1) NOT NULL,
-    UserID int,
-    CompanyName varchar(255),
-    PRIMARY KEY (ID),
-    FOREIGN KEY (UserID) REFERENCES Users(ID),
+CREATE TABLE [dbo].[Customers] (
+    [ID]          INT           IDENTITY (1, 1) NOT NULL,
+    [UserID]      INT           NOT NULL,
+    [CompanyName] VARCHAR (255) NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC),
+    FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users] ([ID])
 );
 
-CREATE TABLE Rentals (
-    ID int IDENTITY (1, 1) NOT NULL,
-    CarID int,
-    CustomerID int,
-    RentDate DateTime,
-    ReturnDate DateTime,
-    PRIMARY KEY (ID),
-    FOREIGN KEY (CarID) REFERENCES Cars(ID),
-    FOREIGN KEY (CustomerID) REFERENCES Customers(ID),
+CREATE TABLE [dbo].[Rentals] (
+    [ID]         INT      IDENTITY (1, 1) NOT NULL,
+    [CarID]      INT      NOT NULL,
+    [CustomerID] INT      NOT NULL,
+    [RentDate]   DATETIME NOT NULL,
+    [ReturnDate] DATETIME NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC),
+    FOREIGN KEY ([CarID]) REFERENCES [dbo].[Cars] ([ID]),
+    FOREIGN KEY ([CustomerID]) REFERENCES [dbo].[Customers] ([ID])
 );
 
 
