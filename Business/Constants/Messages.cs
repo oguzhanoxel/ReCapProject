@@ -26,5 +26,8 @@ namespace Business.Constants
         public static string RentalDeleted = "Rental Deleted";
         public static string RentalUpdated = "Rental Updated";
         public static string RentalReturnDateError = "Rental return date is empty !";
+        public static string CarImageAdded = "Car Image Added";
+        public static string CarImageDeleted = "Car Image Deleted";
+        public static string CarImageUpdated = "Car Image Updated";
     }
 }

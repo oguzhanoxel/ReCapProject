@@ -54,6 +54,16 @@ CREATE TABLE [dbo].[Rentals] (
     FOREIGN KEY ([CustomerID]) REFERENCES [dbo].[Customers] ([ID])
 );
 
+CREATE TABLE [dbo].[CarImages] (
+    [ID]        INT            IDENTITY (1, 1) NOT NULL,
+    [CarID]     INT            NOT NULL,
+    [ImagePath] NVARCHAR (MAX) NOT NULL,
+    [Date]      DATETIME       NOT NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC),
+    FOREIGN KEY ([CarID]) REFERENCES [dbo].[Cars] ([ID])
+);
+
+
 
 INSERT INTO Colors(Name)VALUES ('Black');
 INSERT INTO Colors(Name)VALUES ('White');
