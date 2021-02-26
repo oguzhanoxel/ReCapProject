@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Core.Utilities.Results;
+using Core.Utilities.Business;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -21,6 +22,14 @@ namespace Business.Concrete
 
         public IResult Add(CarImage carImage)
         {
+            IResult result = BusinessRules.Run(
+                    CheckIfImageLimitExceded(carImage.CarID)
+                );
+
+            if (result != null)
+            {
+                return result;
+            }
             _carImageDal.Add(carImage);
             return new SuccessResult(Messages.CarImageAdded);
         }
@@ -55,6 +64,16 @@ namespace Business.Concrete
         {
             _carImageDal.Update(carImage);
             return new SuccessResult(Messages.CarImageUpdated);
+        }
+
+        private IResult CheckIfImageLimitExceded(int carId)
+        {
+            var result = _carImageDal.GetAll(i => i.CarID == carId).Count;
+            if (result >= 5)
+            {
+                return new ErrorResult(Messages.CarImageCountError);
+            }
+            return new SuccessResult();
         }
     }
 }

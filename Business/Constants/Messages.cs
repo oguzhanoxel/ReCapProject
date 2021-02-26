@@ -29,5 +29,6 @@ namespace Business.Constants
         public static string CarImageAdded = "Car Image Added";
         public static string CarImageDeleted = "Car Image Deleted";
         public static string CarImageUpdated = "Car Image Updated";
+        public static string CarImageCountError = "Image count less than 5";
     }
 }
