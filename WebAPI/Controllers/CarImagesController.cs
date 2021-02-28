@@ -1,14 +1,16 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.FileTools;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
@@ -16,13 +18,16 @@ namespace WebAPI.Controllers
     [ApiController]
     public class CarImagesController : ControllerBase
     {
+        string uploadPath = "images";
         ICarImageService _carImageService;
+        IFileService _fileService;
         private static IWebHostEnvironment _webHostEnvironment;
 
-        public CarImagesController(ICarImageService carImageService, IWebHostEnvironment webHostEnvironment)
+        public CarImagesController(ICarImageService carImageService, IWebHostEnvironment webHostEnvironment, IFileService fileService)
         {
             _carImageService = carImageService;
             _webHostEnvironment = webHostEnvironment;
+            _fileService = fileService;
         }
 
         [HttpGet("getall")]
@@ -70,18 +75,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add([FromForm] CarImageModel carImageModel)
+        public IActionResult Add([FromForm] CarImage carImage)
         {
-            CarImage carImage = new CarImage();
-            var resultUpload = UploadImage(carImageModel);
+            var resultUpload = _fileService.UploadFile(_webHostEnvironment.WebRootPath, uploadPath, carImage.FormFile);
 
             if (!resultUpload.Success)
             {
                 return BadRequest(resultUpload.Message);
             }
-
-            carImage.ImagePath = resultUpload.Data.ImagePath;
-            carImage.CarID = carImageModel.CarID;
+            carImage.ImagePath = resultUpload.Data;
+            carImage.CarID = carImage.CarID;
             carImage.Date = DateTime.Now;
             var result = _carImageService.Add(carImage);
             if (result.Success)
@@ -92,9 +95,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(CarImage carImage)
+        public IActionResult Delete([FromForm] CarImage carImage)
         {
-            DeleteImageFromFolder(_carImageService.GetById(carImage.ID).Data.ImagePath);
+            var resultDelete = _fileService.DeleteFileFromFolder(_webHostEnvironment.WebRootPath, carImage.ImagePath);
             var result = _carImageService.Delete(carImage);
             if (result.Success)
             {
@@ -104,22 +107,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update([FromForm] CarImageModel carImageModel, int Id)
+        public IActionResult Update([FromForm] CarImage carImage)
         {
-            CarImage carImage = new CarImage();
-            carImage = _carImageService.GetById(Id).Data;
+            _fileService.DeleteFileFromFolder(_webHostEnvironment.WebRootPath, carImage.ImagePath);
+            var resultUpload = _fileService.UploadFile(_webHostEnvironment.WebRootPath, uploadPath, carImage.FormFile);
 
-            DeleteImageFromFolder(carImage.ImagePath);
-
-            var resultUpload = UploadImage(carImageModel);
-
-            if (!resultUpload.Success)
-            {
-                return BadRequest(resultUpload.Message);
-            }
-
-            carImage.ImagePath = resultUpload.Data.ImagePath;
-            carImage.CarID = carImageModel.CarID;
+            carImage.ImagePath = resultUpload.Data;
+            carImage.CarID = carImage.CarID;
             carImage.Date = DateTime.Now;
             var result = _carImageService.Update(carImage);
             if (result.Success)
@@ -127,47 +121,6 @@ namespace WebAPI.Controllers
                 return Ok(result);
             }
             return BadRequest(result);
-        }
-
-        private IDataResult<CarImage> UploadImage(CarImageModel carImageModel)
-        {
-            CarImage carImage = new CarImage();
-            try
-            {
-                if (carImageModel.ImageFile.Length > 0)
-                {
-                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-                    string filePath = path + carImageModel.FileName +"_"+ Guid.NewGuid().ToString() + ".jpg";
-                    using (FileStream fileStream = System.IO.File.Create(filePath))
-                    {
-                        carImageModel.ImageFile.CopyTo(fileStream);
-                        fileStream.Flush();
-                    }
-                    carImage.ImagePath = filePath;
-                    return new SuccessDataResult<CarImage>(carImage);
-                }
-                else
-                {
-                    return new ErrorDataResult<CarImage>("Not Uploaded");
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ErrorDataResult<CarImage>(ex.Message);
-            }
-        }
-
-        private void DeleteImageFromFolder(string path)
-        {
-            var deletePath = Path.Combine(path);
-            if (System.IO.File.Exists(deletePath))
-            {
-                System.IO.File.Delete(deletePath);
-            }
         }
     }
 }

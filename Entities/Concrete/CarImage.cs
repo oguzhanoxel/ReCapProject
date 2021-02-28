@@ -1,11 +1,13 @@
 ﻿using Core.Entities;
+using Core.Utilities.FileTools;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Entities.Concrete
 {
-    public class CarImage:IEntity
+    public class CarImage: FormFileModel, IEntity
     {
         public int ID { get; set; }
         public int CarID { get; set; }
