@@ -18,7 +18,7 @@ namespace DataAccess.Concrete.EntityFramework
                 var result = from rental in context.Rentals
                              join car in context.Cars on rental.CarID equals car.ID
                              join customer in context.Customers on rental.CustomerID equals customer.ID
-                             join user in context.Users on customer.UserID equals user.ID
+                             join user in context.Users on customer.UserID equals user.Id
                              select new RentalDetailDto
                              {
                                  ID = rental.ID,

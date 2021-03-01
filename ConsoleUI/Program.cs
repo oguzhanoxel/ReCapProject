@@ -54,26 +54,26 @@ namespace ConsoleUI
 
         private static void TestArea()
         {
-            UserManager userManeger = new UserManager(new EfUserDal());
-            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
-            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            //UserManager userManeger = new UserManager(new EfUserDal());
+            //CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            //RentalManager rentalManager = new RentalManager(new EfRentalDal());
 
-            User user = userManeger.GetById(6).Data;
+            //User user = userManeger.GetById(6).Data;
 
-            User newUser = new User();
-            newUser.FirstName = "Mustafa";
-            newUser.LastName = "K.";
-            newUser.Email = "mustafa@example.com";
-            newUser.Password = "123456789Qq";
+            //User newUser = new User();
+            //newUser.FirstName = "Mustafa";
+            //newUser.LastName = "K.";
+            //newUser.Email = "mustafa@example.com";
+            //newUser.Password = "123456789Qq";
 
-            Customer newCustomer = new Customer();
-            newCustomer.UserID = 7;
-            newCustomer.CompanyName = "F company";
+            //Customer newCustomer = new Customer();
+            //newCustomer.UserID = 7;
+            //newCustomer.CompanyName = "F company";
 
-            Rental newRental = new Rental();
-            newRental.CarID = 5;
-            newRental.CustomerID = 6;
-            newRental.RentDate = new DateTime(2021, 01, 12, 12, 00, 00);
+            //Rental newRental = new Rental();
+            //newRental.CarID = 5;
+            //newRental.CustomerID = 6;
+            //newRental.RentDate = new DateTime(2021, 01, 12, 12, 00, 00);
 
             //var result = rentalManager.Add(newRental);
             //var result = customerManager.Add(newCustomer);
