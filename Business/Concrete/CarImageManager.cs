@@ -8,16 +8,20 @@ using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Core.Utilities.FileTools;
 
 namespace Business.Concrete
 {
     public class CarImageManager : ICarImageService
     {
+        private string uploadPath = "images";
         ICarImageDal _carImageDal;
+        IFileService _fileService;
 
-        public CarImageManager(ICarImageDal carImageDal)
+        public CarImageManager(ICarImageDal carImageDal, IFileService fileService)
         {
             _carImageDal = carImageDal;
+            _fileService = fileService;
         }
 
         public IResult Add(CarImage carImage)
@@ -30,12 +34,16 @@ namespace Business.Concrete
             {
                 return result;
             }
+            
+            carImage.ImagePath = _fileService.Add(uploadPath, carImage.FormFile).Data;
+            carImage.Date = DateTime.Now;
             _carImageDal.Add(carImage);
             return new SuccessResult(Messages.CarImageAdded);
         }
 
         public IResult Delete(CarImage carImage)
         {
+            _fileService.Delete(carImage.ImagePath);
             _carImageDal.Delete(carImage);
             return new SuccessResult(Messages.CarImageDeleted);
         }
@@ -62,6 +70,9 @@ namespace Business.Concrete
 
         public IResult Update(CarImage carImage)
         {
+            _fileService.Delete(carImage.ImagePath);
+            carImage.ImagePath = _fileService.Add(uploadPath, carImage.FormFile).Data;
+            carImage.Date = DateTime.Now;
             _carImageDal.Update(carImage);
             return new SuccessResult(Messages.CarImageUpdated);
         }

@@ -26,6 +26,8 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<FileManager>().As<IFileService>().SingleInstance();
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<AuthManager>().As<IAuthService>();
+            builder.RegisterType<FileManager>().As<IFileService>();
+
 
 
             builder.RegisterType<EfBrandDal>().As<IBrandDal>().SingleInstance();

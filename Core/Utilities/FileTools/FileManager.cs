@@ -10,7 +10,9 @@ namespace Core.Utilities.FileTools
 {
     public class FileManager:IFileService
     {
-        public IDataResult<string> UploadFile(String webRootPath, String folderName, IFormFile formFile)
+        static string directory = Directory.GetCurrentDirectory() + @"\wwwroot\";
+
+        public IDataResult<string> Add(String folderName, IFormFile formFile)
         {
             try
             {
@@ -18,7 +20,7 @@ namespace Core.Utilities.FileTools
                 {
                     string fileExtention = Path.GetExtension(formFile.FileName);
                     string fileName = string.Format("{0}{1}", Guid.NewGuid().ToString("D"), fileExtention);
-                    string uploadPath = Path.Combine(webRootPath, folderName);
+                    string uploadPath = Path.Combine(directory, folderName);
                     string fullPath = Path.Combine(uploadPath, fileName);
                     string filePath = Path.Combine(folderName, fileName);
 
@@ -31,7 +33,7 @@ namespace Core.Utilities.FileTools
                         formFile.CopyTo(fileStream);
                         fileStream.Flush();
                     }
-                    return new SuccessDataResult<string>(fullPath, "");
+                    return new SuccessDataResult<string>(filePath.Replace("\\", "/"),"");
                 }
                 else
                 {
@@ -43,9 +45,9 @@ namespace Core.Utilities.FileTools
                 return new ErrorDataResult<string>(ex.Message);
             }
         }
-        public IResult DeleteFileFromFolder(String webRootPath, string filePath)
+        public IResult Delete(string filePath)
         {
-            var deletePath = string.Format("{0}{1}{2}",webRootPath,"\\", filePath);
+            var deletePath = filePath;
             if (System.IO.File.Exists(deletePath))
             {
                 System.IO.File.Delete(deletePath);

@@ -18,16 +18,11 @@ namespace WebAPI.Controllers
     [ApiController]
     public class CarImagesController : ControllerBase
     {
-        string uploadPath = "images";
         ICarImageService _carImageService;
-        IFileService _fileService;
-        private static IWebHostEnvironment _webHostEnvironment;
 
-        public CarImagesController(ICarImageService carImageService, IWebHostEnvironment webHostEnvironment, IFileService fileService)
+        public CarImagesController(ICarImageService carImageService)
         {
             _carImageService = carImageService;
-            _webHostEnvironment = webHostEnvironment;
-            _fileService = fileService;
         }
 
         [HttpGet("getall")]
@@ -77,15 +72,6 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add([FromForm] CarImage carImage)
         {
-            var resultUpload = _fileService.UploadFile(_webHostEnvironment.WebRootPath, uploadPath, carImage.FormFile);
-
-            if (!resultUpload.Success)
-            {
-                return BadRequest(resultUpload.Message);
-            }
-            carImage.ImagePath = resultUpload.Data;
-            carImage.CarID = carImage.CarID;
-            carImage.Date = DateTime.Now;
             var result = _carImageService.Add(carImage);
             if (result.Success)
             {
@@ -95,10 +81,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete([FromForm] CarImage carImage)
+        public IActionResult Delete(CarImage carImage)
         {
-            var resultDelete = _fileService.DeleteFileFromFolder(_webHostEnvironment.WebRootPath, carImage.ImagePath);
-            var result = _carImageService.Delete(carImage);
+            var car = _carImageService.GetById(carImage.ID);
+            var result = _carImageService.Delete(car.Data);
             if (result.Success)
             {
                 return Ok(result);
@@ -109,12 +95,6 @@ namespace WebAPI.Controllers
         [HttpPost("update")]
         public IActionResult Update([FromForm] CarImage carImage)
         {
-            _fileService.DeleteFileFromFolder(_webHostEnvironment.WebRootPath, carImage.ImagePath);
-            var resultUpload = _fileService.UploadFile(_webHostEnvironment.WebRootPath, uploadPath, carImage.FormFile);
-
-            carImage.ImagePath = resultUpload.Data;
-            carImage.CarID = carImage.CarID;
-            carImage.Date = DateTime.Now;
             var result = _carImageService.Update(carImage);
             if (result.Success)
             {
