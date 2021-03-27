@@ -11,6 +11,7 @@ using Entities.DTOs;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -25,7 +26,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarValidator))]
-        [SecuredOperation("car.add,admin")]
+        //[SecuredOperation("car.add,admin")]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         {
@@ -98,6 +99,13 @@ namespace Business.Concrete
             }
             _carDal.Update(car);
             return new SuccessResult(Messages.CarUpdated);
+        }
+
+
+        [CacheAspect]
+        public IDataResult<List<CarDetailDto>> GetCarDetailsFilter(int brandId, int colorId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails().Where(c => c.BrandID == brandId && c.ColorID == colorId).ToList());
         }
     }
 }
