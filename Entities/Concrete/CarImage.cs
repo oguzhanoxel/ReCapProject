@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Entities.Concrete
 {
-    public class CarImage: FormFileModel, IEntity
+    public class CarImage: IEntity
     {
         public int ID { get; set; }
         public int CarID { get; set; }

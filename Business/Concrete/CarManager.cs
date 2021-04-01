@@ -26,7 +26,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CarValidator))]
-        //[SecuredOperation("car.add,admin")]
+        [SecuredOperation("car.add,admin")]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         {
@@ -72,9 +72,9 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        public IDataResult<List<CarDetailDto>> GetCarDetail(int carId)
+        public IDataResult<CarDetailDto> GetCarDetail(int carId)
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails().FindAll(c => c.ID == carId));
+            return new SuccessDataResult<CarDetailDto>(_carDal.GetCarDetails().FindAll(c => c.ID == carId)[0]);
         }
 
         [CacheAspect]
@@ -103,9 +103,19 @@ namespace Business.Concrete
 
 
         [CacheAspect]
-        public IDataResult<List<CarDetailDto>> GetCarDetailsFilter(int brandId, int colorId)
+        public IDataResult<List<CarDetailDto>> GetCarDetailsFilter(int? brandId, int? colorId)
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails().Where(c => c.BrandID == brandId && c.ColorID == colorId).ToList());
+            if(brandId.HasValue && colorId.HasValue)
+            {
+                return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails().Where(c => c.BrandID == brandId && c.ColorID == colorId).ToList());
+            }else if (brandId.HasValue)
+            {
+                return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails().Where(c => c.BrandID == brandId).ToList());
+            }
+            else
+            {
+                return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails().Where(c => c.ColorID == colorId).ToList());
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Core.Utilities.FileTools;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -24,7 +25,7 @@ namespace Business.Concrete
             _fileService = fileService;
         }
 
-        public IResult Add(CarImage carImage)
+        public IResult Add(CarImage carImage, IFormFile file)
         {
             IResult result = BusinessRules.Run(
                     CheckIfImageLimitExceded(carImage.CarID)
@@ -35,7 +36,7 @@ namespace Business.Concrete
                 return result;
             }
             
-            carImage.ImagePath = _fileService.Add(uploadPath, carImage.FormFile).Data;
+            carImage.ImagePath = _fileService.Add(uploadPath, file).Data;
             carImage.Date = DateTime.Now;
             _carImageDal.Add(carImage);
             return new SuccessResult(Messages.CarImageAdded);
@@ -68,10 +69,10 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll(p => p.CarID == carId));
         }
 
-        public IResult Update(CarImage carImage)
+        public IResult Update(CarImage carImage, IFormFile file)
         {
             _fileService.Delete(carImage.ImagePath);
-            carImage.ImagePath = _fileService.Add(uploadPath, carImage.FormFile).Data;
+            carImage.ImagePath = _fileService.Add(uploadPath, file).Data;
             carImage.Date = DateTime.Now;
             _carImageDal.Update(carImage);
             return new SuccessResult(Messages.CarImageUpdated);

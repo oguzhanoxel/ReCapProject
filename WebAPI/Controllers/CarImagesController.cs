@@ -70,9 +70,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add([FromForm] CarImage carImage)
+        public IActionResult Add([FromForm] CarImage carImage, [FromForm] IFormFile file)
         {
-            var result = _carImageService.Add(carImage);
+            var result = _carImageService.Add(carImage, file);
             if (result.Success)
             {
                 return Ok(result);
@@ -93,9 +93,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update([FromForm] CarImage carImage)
+        public IActionResult Update([FromForm] CarImage carImage, [FromForm] IFormFile file)
         {
-            var result = _carImageService.Update(carImage);
+            var result = _carImageService.Update(carImage, file);
             if (result.Success)
             {
                 return Ok(result);
