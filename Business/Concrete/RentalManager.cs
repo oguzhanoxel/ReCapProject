@@ -58,6 +58,11 @@ namespace Business.Concrete
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
         }
 
+        public IDataResult<List<Rental>> GetRentalsByUserId(int userId)
+        {
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r=>r.UserID==userId));
+        }
+
         [ValidationAspect(typeof(RentalValidator))]
         public IResult Update(Rental rental)
         {
